@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import rawEvents from "./data/events.json";
 import type { Category, TimelineEvent } from "./data/types";
 
-const events = rawEvents as TimelineEvent[];
+const eventModules = import.meta.glob("./data/events/*.json", { eager: true, import: "default" }) as Record<string, TimelineEvent>;
+const events = Object.values(eventModules).sort((a, b) => (a.kind === "point" ? a.date : a.startDate).localeCompare(b.kind === "point" ? b.date : b.startDate));
 const rangeStart = new Date("2000-01-01T00:00:00+09:00").getTime();
 const rangeEnd = new Date("2026-12-31T00:00:00+09:00").getTime();
 const colors: Record<Category, string> = { 政治: "#ff5d45", 社会: "#58b9ff", 経済: "#ffb54a", 災害: "#af8cff", 科学: "#4de0a3", 文化: "#ff72a8", スポーツ: "#63d6de" };
